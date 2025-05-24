@@ -215,11 +215,11 @@ Etudiants *supprimer_un_etudiant(Etudiants *tete, const char *filename)
             found = 1;
             if (previous == NULL)
             {
-                Etudiants *new_head = current->suivant;
+                Etudiants *to_delete = current->suivant;
                 free(current);
                 printf("Étudiant avec CNE %d supprimé.\n", CNE);
-                mettre_a_jour_fichier(new_head, filename);
-                return new_head;
+                mettre_a_jour_fichier(to_delete, filename);
+                return to_delete;
             }
             else
             {
@@ -241,7 +241,7 @@ Etudiants *supprimer_un_etudiant(Etudiants *tete, const char *filename)
     return tete;
 }
 
-void ajouter_etudiant(Etudiants **tete, const char *filename)
+void  ajouter_etudiant(Etudiants **tete, const char *filename)
 {
     Etudiants *nouveau = malloc(sizeof(Etudiants));
     if (nouveau == NULL)
@@ -349,7 +349,7 @@ void empiler_suppression(Etudiants *etudiant)
         return;
     }
 
-    // Allouer une copie de l'étudiant
+    
     Etudiants *copie = malloc(sizeof(Etudiants));
     if (copie == NULL)
     {
@@ -358,7 +358,7 @@ void empiler_suppression(Etudiants *etudiant)
         return;
     }
 
-    *copie = *etudiant; // Copie superficielle
+    *copie = *etudiant; 
     copie->suivant = NULL;
 
     nouveau->etudiant = copie;
@@ -398,7 +398,7 @@ void inscrire_etudiant(Etudiants **liste, FileAttente *file, const char *filenam
         return;
     }
 
-    // Insert at head
+
     etudiant->suivant = *liste;
     *liste = etudiant;
     
@@ -423,6 +423,7 @@ void ajouter_file_attente(FileAttente *file, Etudiants *etudiant) {
     }
     printf("%s %s ajouté à la file d'attente\n", nouveau->nom, nouveau->prenom);
 }
+
 
 Etudiants* retirer_file_attente(FileAttente *file) {
     if (file->debut == NULL) return NULL;

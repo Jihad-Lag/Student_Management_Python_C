@@ -42,15 +42,15 @@ typedef struct FileAttente {
 typedef struct OperationResult {
     int success;
     char *message;
-    Etudiant *etudiant;  // For functions that return a student
-    Etudiant *liste;     // For functions that return a list
+    Etudiant *etudiant; 
+    Etudiant *liste;     
 } OperationResult;
 
-// Global variables
+
 PileAnnulation *pileSuppressions = NULL;
 FileAttente fileAttente = {NULL, NULL};
 
-// Utility functions
+
 void calculer_moyenne(Etudiant *etudiant) {
     if (!etudiant) return;
     etudiant->moyenne = 0;
@@ -116,9 +116,9 @@ EXPORT OperationResult lire_fichier_etudiants(const char *filename) {
 
     while (fscanf(file, "%49s %49s %d %f %f %f %f",
                 nom, prenom, &CNE, &notes[0], &notes[1], &notes[2], &notes[3]) == 7) {
-        // Validate input
+        
         if (CNE <= 0) {
-            continue;  // Skip invalid CNE
+            continue;  
         }
         
         int valid_notes = 1;
@@ -129,7 +129,7 @@ EXPORT OperationResult lire_fichier_etudiants(const char *filename) {
             }
         }
         if (!valid_notes) {
-            continue;  // Skip invalid notes
+            continue;  
         }
 
         Etudiant *nouveau = malloc(sizeof(Etudiant));
@@ -139,11 +139,11 @@ EXPORT OperationResult lire_fichier_etudiants(const char *filename) {
             return result;
         }
 
-        // Clear the strings first
+        
         memset(nouveau->nom, 0, sizeof(nouveau->nom));
         memset(nouveau->prenom, 0, sizeof(nouveau->prenom));
 
-        // Copy strings with proper bounds checking
+        
         strncpy(nouveau->nom, nom, sizeof(nouveau->nom) - 1);
         strncpy(nouveau->prenom, prenom, sizeof(nouveau->prenom) - 1);
         
@@ -191,10 +191,8 @@ EXPORT char* afficher_etudiant(Etudiant *etudiant) {
     char *buffer = malloc(MAX_BUFFER_SIZE);
     if (!buffer) return NULL;
     
-    // Initialize buffer with zeros
+   
     memset(buffer, 0, MAX_BUFFER_SIZE);
-    
-    // Use safer string formatting
     snprintf(buffer, MAX_BUFFER_SIZE, 
             "Nom: %s\nPrenom: %s\nCNE: %d\nNotes: %.2f, %.2f, %.2f, %.2f\nMoyenne: %.2f",
             etudiant->nom, etudiant->prenom, etudiant->CNE,
@@ -208,7 +206,7 @@ EXPORT char* afficher_etudiant(Etudiant *etudiant) {
 EXPORT char* afficher_liste_etudiants(Etudiant *tete) {
     if (!tete) return strdup("Aucun etudiant dans la liste");
     
-    // Calculate needed size
+   
     size_t size = MAX_BUFFER_SIZE;
     Etudiant *current = tete;
     while (current) {
@@ -219,7 +217,7 @@ EXPORT char* afficher_liste_etudiants(Etudiant *tete) {
     char *buffer = malloc(size);
     if (!buffer) return NULL;
     
-    // Initialize buffer with zeros
+    
     memset(buffer, 0, size);
     
     buffer[0] = '\0';
@@ -244,7 +242,7 @@ EXPORT OperationResult ajouter_etudiant(Etudiant **tete, const char *filename,
                                       int CNE, const float *notes) {
     OperationResult result = {0, NULL, NULL, NULL};
     
-    // Validate input
+  
     if (!nom || !prenom || CNE <= 0) {
         result.message = strdup("Données invalides");
         return result;
@@ -257,7 +255,7 @@ EXPORT OperationResult ajouter_etudiant(Etudiant **tete, const char *filename,
         }
     }
     
-    // Check if CNE already exists
+  
     Etudiant *current = *tete;
     while (current) {
         if (current->CNE == CNE) {
@@ -401,12 +399,11 @@ EXPORT OperationResult trier_etudiants_moyenne(Etudiant **tete, const char *file
         while (ptr1->suivant != lptr) {
             if ((ordre && ptr1->moyenne > ptr1->suivant->moyenne) ||
                 (!ordre && ptr1->moyenne < ptr1->suivant->moyenne)) {
-                // Swap data
+         
                 Etudiant temp = *ptr1;
                 *ptr1 = *(ptr1->suivant);
                 *(ptr1->suivant) = temp;
                 
-                // Keep the next pointers correct
                 Etudiant *temp_next = ptr1->suivant->suivant;
                 ptr1->suivant->suivant = ptr1->suivant;
                 ptr1->suivant = temp_next;
@@ -435,7 +432,7 @@ EXPORT OperationResult ajouter_file_attente(const char *nom, const char *prenom,
                                           int CNE, const float *notes) {
     OperationResult result = {0, NULL, NULL, NULL};
     
-    // Validate input
+    
     if (!nom || !prenom || CNE <= 0) {
         result.message = strdup("Données invalides");
         return result;
@@ -506,7 +503,7 @@ EXPORT char* afficher_file_attente() {
     char *buffer = malloc(MAX_BUFFER_SIZE);
     if (!buffer) return NULL;
     
-    // Initialize buffer with zeros
+
     memset(buffer, 0, MAX_BUFFER_SIZE);
     
     buffer[0] = '\0';

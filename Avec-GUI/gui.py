@@ -6,18 +6,16 @@ import os
 import locale
 import sys
 
-# Set locale to handle special characters
+
 locale.setlocale(locale.LC_ALL, '')
 
 def safe_free(ptr):
-    """Safely free memory only if it's a valid pointer"""
     if ptr and isinstance(ptr, (int, c_void_p, c_char_p)):
         try:
             free(cast(ptr, c_void_p))
         except Exception as e:
             print(f"Error freeing pointer: {e}")
 
-# Load the C standard library for free()
 try:
     libc = CDLL(None)
     free = libc.free
@@ -27,7 +25,7 @@ except Exception as e:
     print(f"Failed to load libc: {e}")
     sys.exit(1)
 
-# Load the student management DLL
+
 try:
     dll_path = os.path.abspath("student_management.dll")
     student_dll = CDLL(dll_path)
@@ -35,7 +33,7 @@ except Exception as e:
     messagebox.showerror("Error", f"Failed to load DLL: {e}")
     sys.exit(1)
 
-# Define structures to match the C code
+
 class Etudiant(Structure):
     _fields_ = [
         ("nom", c_char * 50),
@@ -54,7 +52,7 @@ class OperationResult(Structure):
         ("liste", POINTER(Etudiant))
     ]
 
-# Define function prototypes with proper error handling
+ 
 def setup_dll_functions():
     student_dll.lire_fichier_etudiants.argtypes = [c_char_p]
     student_dll.lire_fichier_etudiants.restype = OperationResult
@@ -106,15 +104,14 @@ class StudentManagementApp:
         self.root.title("Système de gestion des étudiants")
         self.root.geometry("1000x700")
         
-        # Initialize variables
+       
         self.current_file = None
         self.student_list = None
-        self.current_sort = None  # None = unsorted, 1 = ascending, 0 = descending
+        self.current_sort = None  
         
-        # Create UI
+     
         self.setup_ui()
         
-        # Try to auto-load a file
         self.auto_load_file()
     
     def setup_ui(self):
@@ -123,7 +120,7 @@ class StudentManagementApp:
         self.style = ttk.Style()
         self.style.configure("TFrame", background="#f0f0f0")
         self.style.configure("TLabel", background="#f0f0f0", foreground="#333333")
-        self.style.configure("TButton", background="#4a90e2", foreground="white")
+        self.style.configure("TButton", foreground="black")
         self.style.configure("TEntry", fieldbackground="white")
         self.style.configure("ActiveSort.TButton", background="#2e7d32", foreground="white")
         
@@ -139,7 +136,7 @@ class StudentManagementApp:
         self.create_student_tab()
         self.create_queue_tab()
         self.create_view_tab()
-        self.create_sort_tab()  # New dedicated sorting tab
+        self.create_sort_tab() 
     
     def create_sort_tab(self):
         """Create a dedicated tab for sorting operations"""
@@ -559,7 +556,7 @@ class StudentManagementApp:
         else:
             self.student_status.config(text=status_text)
             
-        self.root.update()  # Force UI update
+        self.root.update() 
         
         try:
             result = student_dll.trier_etudiants_moyenne(
